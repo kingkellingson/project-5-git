@@ -15,6 +15,7 @@
 #include "Tuple.h"
 #include "Relation.h"
 #include "Parser.h"
+#include "Graph.h"
 #include "DataStructures.h"
 
 using namespace std;
@@ -90,6 +91,9 @@ public:
         ///this is a function to test
         //joinWithDatabase();
 
+        cout << endl << endl << "-------------Create Test Graph----------------";
+        CreateDependencyGraphs();
+
         //cout << endl << endl << "-------------Start Rules----------------";
         cout << "Rule Evaluation";
         EvaluateRules();
@@ -98,6 +102,29 @@ public:
         cout << endl << endl << "Query Evaluation" << endl;
         EvaluateQueries();
 
+    }
+
+    ///test function to create a test graph
+    void CreateDependencyGraphs ()
+    {
+        Graph myGraph;
+        myGraph.createSet(1);
+        myGraph.inputToMap(1, 2);
+        myGraph.inputToMap(1, 3);
+        myGraph.inputToMap(1, 4);
+        myGraph.inputToMap(1, 5);
+        myGraph.inputToMap(1, 6);
+        myGraph.inputToMap(1, 7);
+        myGraph.createSet(2);
+        myGraph.inputToMap(2, 2);
+        myGraph.inputToMap(2, 3);
+        myGraph.inputToMap(2, 4);
+        myGraph.inputToMap(2, 5);
+        myGraph.inputToMap(2, 6);
+        myGraph.inputToMap(2, 7);
+
+        cout << endl << "-------------Output test Graph Below----------------" << endl;
+        myGraph.toString();
     }
 
     void EvaluateRules () ///Fixed Point Algorithm

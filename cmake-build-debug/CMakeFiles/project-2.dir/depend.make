@@ -4,6 +4,7 @@
 CMakeFiles/project-2.dir/main.cpp.o: ../Automaton.h
 CMakeFiles/project-2.dir/main.cpp.o: ../BlockCommentAutomaton.h
 CMakeFiles/project-2.dir/main.cpp.o: ../DataStructures.h
+CMakeFiles/project-2.dir/main.cpp.o: ../Graph.h
 CMakeFiles/project-2.dir/main.cpp.o: ../IDAutomaton.h
 CMakeFiles/project-2.dir/main.cpp.o: ../Interpreter.h
 CMakeFiles/project-2.dir/main.cpp.o: ../Lexer.h
