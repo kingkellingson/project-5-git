@@ -75,6 +75,8 @@ class Interpreter {
 private:
     DatalogProgram myProgramToInterpret; //has a DatalogProgram object in it
     Database myDatabase;
+    Graph myForwardGraph;
+    Graph myBackwardGraph;
 public:
     Interpreter (DatalogProgram& parserOutput) : myProgramToInterpret (parserOutput)
     {
@@ -91,11 +93,14 @@ public:
         ///this is a function to test
         //joinWithDatabase();
 
-        cout << endl << endl << "-------------Create Test Graph----------------";
+        cout << endl << endl << "-------------Create Test Graph----------------"<< endl;
         CreateDependencyGraphs();
 
+        cout << endl << endl << "-------------Get PostOrder----------------"<< endl;
+        GetPostOrder();
+
         //cout << endl << endl << "-------------Start Rules----------------";
-        cout << "Rule Evaluation";
+        cout << endl << "Rule Evaluation";
         EvaluateRules();
 
         //cout << endl << endl << "-------------Queries Below----------------" << endl;
@@ -104,27 +109,82 @@ public:
 
     }
 
-    ///test function to create a test graph
+    void GetPostOrder()
+    {
+            stack<int> myPostOrder;
+            myPostOrder = myForwardGraph.DepthFirstSearchForestPostOrder();
+
+            cout << endl << endl << "-------------Print Reverse PostOrder----------------"<< endl;
+            while (!myPostOrder.empty())
+            {
+                cout << myPostOrder.top() << "->";
+                myPostOrder.pop();
+            }
+    }
+
+    ///Creates the Forward and Backwards Adjacency Lists
     void CreateDependencyGraphs ()
     {
-        Graph myGraph;
-        myGraph.createSet(1);
-        myGraph.inputToMap(1, 2);
-        myGraph.inputToMap(1, 3);
-        myGraph.inputToMap(1, 4);
-        myGraph.inputToMap(1, 5);
-        myGraph.inputToMap(1, 6);
-        myGraph.inputToMap(1, 7);
-        myGraph.createSet(2);
-        myGraph.inputToMap(2, 2);
-        myGraph.inputToMap(2, 3);
-        myGraph.inputToMap(2, 4);
-        myGraph.inputToMap(2, 5);
-        myGraph.inputToMap(2, 6);
-        myGraph.inputToMap(2, 7);
+        Graph ForwardGraph;
+        Graph ReverseGraph;
 
-        cout << endl << "-------------Output test Graph Below----------------" << endl;
-        myGraph.toString();
+        ///this could all be another function, called "createSets"?
+        for (size_t i = 0; i < myProgramToInterpret.getRules().size(); ++i) //for as many rules as there are
+        {
+            ForwardGraph.createSet(i);
+            ReverseGraph.createSet(i);
+        }
+
+        //This actually creates the graph by matching producers with consumers
+        for (size_t h = 0; h < myProgramToInterpret.getRules().size(); ++h) //for all the rules
+        {
+            string producer = myProgramToInterpret.getRules().at(h)->getDescription(); //make a string of that head's predicate
+            for (size_t i = 0; i < myProgramToInterpret.getRules().size(); ++i) //for all the rules
+            {
+                for (size_t j = 0; j < myProgramToInterpret.getRules().at(i)->getPredicate().size(); ++j)
+                    //for all the predicates in that rule
+                {
+                    string consumer = myProgramToInterpret.getRules().at(i)->getPredicate().at(j)->getDescription(); //make a string of
+                    if (producer == consumer) {                                                                      //the selected Parameter
+                        cout << endl << "________ " << producer << " MATCHED WITH " << consumer << " ________";
+                        ForwardGraph.inputToMap(i,h);
+                        ReverseGraph.inputToMap(h,i);
+                    }
+                }
+            }
+        }
+
+        cout << endl << endl << "-------------Forward Graph----------------"<< endl;
+        ForwardGraph.toString();
+        cout << endl << endl << "-------------Backwards Graph----------------"<< endl;
+        ReverseGraph.toString();
+
+        ///testGraph(ForwardGraph);
+        myBackwardGraph = ReverseGraph;
+        myForwardGraph = ForwardGraph;
+    }
+
+    void testGraph (Graph& toTest)
+    {
+        cout << endl << "****Testing Graph****";
+        toTest.checkBools();
+        toTest.setBools();
+        cout << endl << "Now it is set :)";
+        toTest.checkBools();
+        cout << endl << "Clearing...";
+        toTest.clearBools();
+        toTest.checkBools();
+
+        cout << endl << "Making Stack...";
+        stack<int> testStack;
+        toTest.DepthFirstSearch(0, testStack);
+        cout << endl << "Printing Stack (Backwards order)..." << endl;
+
+        while (!testStack.empty())
+        {
+            cout << testStack.top() << "->";
+            testStack.pop();
+        }
     }
 
     void EvaluateRules () ///Fixed Point Algorithm

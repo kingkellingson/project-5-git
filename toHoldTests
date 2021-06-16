@@ -60,3 +60,22 @@ cout << endl << "_________NOW TESTING_________";
         {
             cout << endl << "$$$$$$$$$$$We're Doing Cross Product Now!$$$$$$$$$$$";
         }
+
+
+        myGraph.createSet(1);
+        myGraph.inputToMap(1, 2);
+        myGraph.inputToMap(1, 3);
+        myGraph.inputToMap(1, 4);
+        myGraph.inputToMap(1, 5);
+        myGraph.inputToMap(1, 6);
+        myGraph.inputToMap(1, 7);
+        myGraph.createSet(2);
+        myGraph.inputToMap(2, 2);
+        myGraph.inputToMap(2, 3);
+        myGraph.inputToMap(2, 4);
+        myGraph.inputToMap(2, 5);
+        myGraph.inputToMap(2, 6);
+        myGraph.inputToMap(2, 7);
+
+        cout << endl << "-------------Output test Graph Below----------------" << endl;
+        myGraph.toString();
